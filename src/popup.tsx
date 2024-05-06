@@ -1,4 +1,4 @@
-import { useStorage } from "@plasmohq/storage/hook"
+import { Storage } from "@plasmohq/storage"
 
 import { Button } from "~components/ui/button"
 
@@ -11,11 +11,22 @@ import React, { useEffect, useState } from "react"
 
 import { Input } from "~components/ui/input"
 
+const store = new Storage()
+
 function IndexPopup() {
-  const [apiKey, setApiKey] = useStorage("apiKey")
+  const [apiKey, setApiKey] = useState("")
+  const [apiKeyInput, setApiKeyInput] = useState("")
+
+  useEffect(() => {
+    async function fetchKeyFromStorage() {
+      let key = await store.get("apiKey")
+      setApiKey(key)
+    }
+    fetchKeyFromStorage()
+  }, [])
 
   function renderState() {
-    if (apiKey !== undefined) {
+    if (apiKey !== "") {
       return (
         <React.Fragment>
           <div className="plasmo-w-full plasmo-bg-green-800 plasmo-border plasmo-border-green-500 plasmo-rounded-lg plasmo-p-4 plasmo-text-sm plasmo-flex-col plasmo-items-center">
@@ -40,7 +51,8 @@ function IndexPopup() {
           <Button
             className="plasmo-w-full"
             onClick={async () => {
-              await setApiKey(undefined)
+              await store.set("apiKey", "")
+              await setApiKey("")
             }}>
             Disconnect Key
           </Button>
@@ -57,13 +69,14 @@ function IndexPopup() {
             placeholder="Enter key here"
             autoCorrect="off"
             autoCapitalize="off"
-            value={apiKey}
-            onChange={async (e) => await setApiKey(e.target.value)}
+            value={apiKeyInput}
+            onChange={async (e) => await setApiKeyInput(e.target.value)}
             className="plasmo-mb-4"></Input>
           <Button
             className="plasmo-w-full"
             onClick={async () => {
-              await setApiKey(apiKey)
+              await store.set("apiKey", apiKeyInput)
+              await setApiKey(apiKeyInput)
             }}>
             Connect
           </Button>

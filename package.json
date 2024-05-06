@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.8",
     "@plasmohq/storage": "^1.10.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
@@ -35,6 +36,21 @@
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
+    ],
+    "permissions": [
+      "scripting",
+      "activeTab", 
+      "tabs",
+      "contextMenus"
+    ],
+    "commands": {
+      "generate-answer": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+G",
+          "mac": "Command+Shift+G"
+        },
+        "description": "Generate."
+      }
+    }
   }
 }
