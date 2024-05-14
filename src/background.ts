@@ -12,13 +12,14 @@ async function writeToClipboard(text) {
   })
 }
 
-async function generateAnswer(question, tab) {
+async function generateAnswer(question) {
   // Pull API key
   let key = await store.get("apiKey")
 
-  console.log(`Pulled API key: ${key}`)
-
-  console.log(`Got question: ${question}`)
+  if (key === "" || key === null) {
+    writeToClipboard("Can't generate an answer, no API key given.")
+    return
+  }
 
   // Initialize Anthropic model
   const anthropic = new Anthropic({
@@ -36,8 +37,6 @@ async function generateAnswer(question, tab) {
     let timeString = `${minutes > 0 ? `${minutes}m ` : ""}${seconds}s`
     writeToClipboard(`Generating answer... ${timeString}`)
   }, 1000)
-
-  console.log(`Generating...`)
 
   const answer = await anthropic.messages
     .create({
@@ -78,12 +77,3 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   generateAnswer(info.selectionText, tab)
 })
-
-// TODO: Do a keystroke
-// chrome.commands.onCommand.addListener((command, tab) => {
-//   console.log(`Caught a command: ${command}`)
-//   if (command === "generate-answer") {
-//     let question = prompt("What's the question?")
-//     generateAnswer(question, tab)
-//   }
-// })
