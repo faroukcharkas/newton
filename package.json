@@ -1,7 +1,7 @@
 {
   "name": "newton",
   "displayName": "Newton",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Discreet custom AI prompting",
   "author": "Farouk Charkas",
   "scripts": {
